@@ -70,5 +70,3 @@ vaga, relatórios, exportações e permissões por perfil. O teste apaga e recri
 - O dígito verificador do CPF é validado aqui (Python); o banco confere só o formato.
 - Impressão simulada no terminal; em uma aplicação web seria a janela de impressão do navegador.
 - Beneficiário não tem login (os perfis definidos são Administrador, Secretário e Professor).
-# FATEC-PI
-# FATEC-PI
