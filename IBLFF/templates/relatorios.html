@@ -19,8 +19,8 @@
         <a href="{{ url_for('dashboard') }}">Painel</a
         ><a href="{{ url_for('cadastro') }}">Cadastros</a
         ><a href="{{ url_for('chamada') }}">Chamada</a
-        ><a class="active" href="relatorios.html">Relatórios</a
-        ><a href="modalidades.html">Modalidades</a>
+        ><a class="active" href="{{ url_for('relatorios') }}">Relatórios</a
+        ><a href="{{ url_for('modalidades') }}">Modalidades</a>
       </nav>
       <form method="POST" action="{{ url_for('sair') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />

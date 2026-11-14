@@ -246,16 +246,6 @@
       const identity = document.getElementById("identity");
       const identityError = document.getElementById("identity-error");
       const consentModal = document.getElementById("consent-modal");
-      loginForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        if (!identity.value.trim()) {
-          identityError.textContent = "Informe seu e-mail ou telefone.";
-          identity.focus();
-          return;
-        }
-        identityError.textContent = "";
-        consentModal.showModal();
-      });
       document
         .getElementById("toggle-password")
         .addEventListener("click", () => {
@@ -288,10 +278,6 @@
           return;
         }
         document.getElementById("recovery-success").classList.add("visible");
-      });
-      document.getElementById("logout-button").addEventListener("click", () => {
-        dashboardView.classList.add("hidden");
-        loginView.classList.remove("hidden");
       });
     </script>
   </body>

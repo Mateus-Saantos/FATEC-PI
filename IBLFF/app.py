@@ -26,6 +26,12 @@ from seguranca import Sessao
 from config import VERSAO_TERMO_LGPD
 
 
+from cadastro_beneficiario import cadastrar_beneficiario
+from cadastro_voluntario import cadastrar_voluntario
+from cadastro_modalidade import listar_turmas
+
+
+
 app = Flask(
     __name__,
     template_folder="templates",
@@ -256,6 +262,149 @@ def sair():
     flash("Você saiu do sistema.", "sucesso")
     return redirect(url_for("index"))
 
+@app.route("/cadastro")
+@login_obrigatorio
+def cadastro():
+    turmas = listar_turmas()
+
+    return render_template(
+        "cadastro.html",
+        turmas=turmas
+    )
+    
+@app.route("/chamada")
+@login_obrigatorio
+def chamada():
+    return render_template("chamada.html")
+
+
+@app.route("/relatorios")
+@login_obrigatorio
+def relatorios():
+    return render_template("relatorios.html")
+
+
+@app.route("/modalidades")
+@login_obrigatorio
+def modalidades():
+    return render_template("modalidades.html")
+
+@app.route("/form-voluntario")
+@login_obrigatorio
+def form_voluntario():
+    return render_template("forms/form-voluntario.html")
+
+
+@app.route("/form-beneficiario")
+@login_obrigatorio
+def form_beneficiario():
+    return render_template(
+        "forms/form-beneficiario.html",
+        turmas=listar_turmas()
+    )
+
+@app.route("/cadastrar-beneficiario", methods=["POST"])
+@login_obrigatorio
+def cadastrar_beneficiario_web():
+
+    if not validar_csrf():
+        return redirect(url_for("cadastro"))
+
+    try:
+        turma_ids = [
+            int(turma_id)
+            for turma_id in request.form.getlist("turma_ids")
+        ]
+    except ValueError:
+        flash("Seleção de turma inválida.", "erro")
+        return redirect(url_for("cadastro"))
+
+    data_nasc = request.form.get("data_nasc", "").strip()
+
+    if data_nasc:
+        try:
+            data_nasc = (
+                f"{data_nasc[8:10]}/"
+                f"{data_nasc[5:7]}/"
+                f"{data_nasc[0:4]}"
+            )
+        except (IndexError, ValueError):
+            flash("Data de nascimento inválida.", "erro")
+            return redirect(url_for("cadastro"))
+
+    responsavel_nome = request.form.get("responsavel_nome", "").strip()
+    responsavel_telefone = request.form.get(
+        "responsavel_telefone", ""
+    ).strip()
+    responsavel_cpf = request.form.get(
+        "responsavel_cpf", ""
+    ).strip()
+
+    responsavel = None
+
+    if responsavel_nome or responsavel_telefone or responsavel_cpf:
+        responsavel = {
+            "nome": responsavel_nome,
+            "telefone": responsavel_telefone,
+            "cpf": responsavel_cpf or None,
+            "consentimento": (
+                request.form.get("consentimento_responsavel") == "on"
+            )
+        }
+
+    resultado = cadastrar_beneficiario(
+        obter_sessao(),
+        nome=request.form.get("nome", "").strip(),
+        data_nasc=data_nasc,
+        cpf=request.form.get("cpf", "").strip(),
+        telefone=request.form.get("telefone", "").strip(),
+        turma_ids=turma_ids,
+        email=request.form.get("email", "").strip(),
+        endereco=request.form.get("endereco", "").strip(),
+        responsavel=responsavel
+    )
+
+    if resultado.ok:
+        flash(resultado.mensagem, "sucesso")
+    else:
+        flash(resultado.mensagem, "erro")
+
+    return redirect(url_for("cadastro"))
+
+@app.route("/cadastrar-voluntario", methods=["POST"])
+@login_obrigatorio
+def cadastrar_voluntario_web():
+
+    if not validar_csrf():
+        return redirect(url_for("cadastro"))
+
+    data_nasc = request.form.get("data_nasc", "").strip()
+
+    if data_nasc:
+        data_nasc = (
+            f"{data_nasc[8:10]}/"
+            f"{data_nasc[5:7]}/"
+            f"{data_nasc[0:4]}"
+        )
+
+    resultado = cadastrar_voluntario(
+        obter_sessao(),
+        nome=request.form.get("nome", "").strip(),
+        data_nasc=data_nasc,
+        cpf=request.form.get("cpf", "").strip(),
+        telefone=request.form.get("telefone", "").strip(),
+        email=request.form.get("email", "").strip(),
+        senha=request.form.get("senha", ""),
+        materia_funcao=request.form.get("materia_funcao", "").strip(),
+        termo_aceito=request.form.get("termo_assinado") == "on"
+    )
+
+    if resultado.ok:
+        flash(resultado.mensagem, "sucesso")
+    else:
+        flash(resultado.mensagem, "erro")
+
+    return redirect(url_for("cadastro"))
 
 if __name__ == "__main__":
     app.run(debug=os.environ.get("FLASK_DEBUG", "0") == "1")

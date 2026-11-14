@@ -1,13 +1,14 @@
-
-<form class="data-form"
-      action="{{ url_for('cadastrar_voluntario_web') }}"
-      method="POST">
+<form
+  class="data-form"
+  action="{{ url_for('cadastrar_voluntario_web') }}"
+  method="POST"
+>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
 
   <fieldset>
     <legend>Dados pessoais</legend>
 
     <div class="form-grid">
-
       <div class="field full">
         <label for="voluntario-nome">Nome completo *</label>
         <input
@@ -21,13 +22,21 @@
         />
       </div>
 
+      <div class="form-group">
+        <label for="turma_ids">Turmas</label>
+
+        <select id="turma_ids" name="turma_ids" multiple required>
+          {% for turma in turmas %}
+          <option value="{{ turma.turma_id }}">
+            {{ turma.turma }} - {{ turma.modalidade }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
       <div class="field">
         <label for="voluntario-nascimento">Data de nascimento</label>
-        <input
-          id="voluntario-nascimento"
-          name="data_nasc"
-          type="date"
-        />
+        <input id="voluntario-nascimento" name="data_nasc" type="date" />
       </div>
 
       <div class="field">
@@ -42,7 +51,6 @@
           placeholder="Somente 11 números"
         />
       </div>
-
     </div>
   </fieldset>
 
@@ -50,7 +58,6 @@
     <legend>Contato</legend>
 
     <div class="form-grid">
-
       <div class="field">
         <label for="voluntario-telefone">Telefone</label>
         <input
@@ -88,7 +95,6 @@
           autocomplete="street-address"
         />
       </div>
-
     </div>
 
     <small class="field-hint">
@@ -100,7 +106,6 @@
     <legend>Atuação voluntária</legend>
 
     <div class="form-grid">
-
       <div class="field full">
         <label for="voluntario-funcao">Matéria ou função *</label>
         <input
@@ -127,19 +132,13 @@
 
       <div class="field full">
         <label class="check-row">
-          <input
-            type="checkbox"
-            name="termo_assinado"
-            value="1"
-            required
-          />
+          <input type="checkbox" name="termo_assinado" value="1" required />
           <span>
-            Confirmo que o termo de voluntariado foi assinado
-              e que a informação acima corresponde à assinatura realizada.
+            Confirmo que o termo de voluntariado foi assinado e que a informação
+            acima corresponde à assinatura realizada.
           </span>
         </label>
       </div>
-
     </div>
   </fieldset>
 
@@ -152,5 +151,4 @@
       Salvar voluntário
     </button>
   </div>
-
 </form>
