@@ -1,80 +1,298 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sistema de gestão do Instituto Batista Lázaro Ferreira Filho">
-  <title>IBLFF | Acesso ao sistema</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <main class="auth-layout" id="login-view">
-    <section class="brand-panel" aria-label="Sobre o Instituto">
-      <div>
-        <div class="brand-mark" aria-hidden="true">IB</div>
-        <h1>Instituto Batista<br>Lázaro Ferreira Filho</h1>
-        <p class="tagline">“Esperança que transforma. Cuidado que acolhe. Educação que liberta.”</p>
-      </div>
-      <ul class="feature-list">
-        <li><span class="feature-icon purple">♟</span>Gestão de Voluntários e Beneficiários</li>
-        <li><span class="feature-icon green">✓</span>Controle de Presença Digital</li>
-        <li><span class="feature-icon blue">▥</span>Relatórios e Auditoria</li>
-        <li><span class="feature-icon yellow">◈</span>Gestão de Modalidades</li>
-      </ul>
-      <p class="copyright">© 2026 IBLFF — Todos os direitos reservados</p>
-    </section>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Sistema de gestão do Instituto Batista Lázaro Ferreira Filho"
+    />
+    <title>IBLFF | Acesso ao sistema</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <main class="auth-layout" id="login-view">
+      <section class="brand-panel" aria-label="Sobre o Instituto">
+        <div>
+          <div class="brand-mark" aria-hidden="true">IB</div>
+          <h1>Instituto Batista<br />Lázaro Ferreira Filho</h1>
+          <p class="tagline">
+            “Esperança que transforma. Cuidado que acolhe. Educação que
+            liberta.”
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li>
+            <span class="feature-icon purple">♟</span>Gestão de Voluntários e
+            Beneficiários
+          </li>
+          <li>
+            <span class="feature-icon green">✓</span>Controle de Presença
+            Digital
+          </li>
+          <li>
+            <span class="feature-icon blue">▥</span>Relatórios e Auditoria
+          </li>
+          <li>
+            <span class="feature-icon yellow">◈</span>Gestão de Modalidades
+          </li>
+        </ul>
+        <p class="copyright">© 2026 IBLFF — Todos os direitos reservados</p>
+      </section>
 
-    <section class="login-area" aria-labelledby="login-title">
-      <div class="login-card">
-        <div class="mobile-brand"><span class="brand-mark">IB</span><strong>IBLFF</strong></div>
-        <h2 id="login-title">Bem-vindo de volta</h2>
-        <p class="intro">Faça login para acessar o sistema</p>
-        <form id="login-form" novalidate>
-          <label for="identity">E-mail ou Telefone</label>
-          <input id="identity" name="identity" type="text" placeholder="seuemail@exemplo.com" autocomplete="username">
-          <p class="error-message" id="identity-error" role="alert"></p>
+      <section class="login-area" aria-labelledby="login-title">
+        <div class="login-card">
+          {% with mensagens = get_flashed_messages(with_categories=true) %} {%
+          for categoria, mensagem in mensagens %}
+          <p
+            class="{{ 'error-message' if categoria == 'erro' else 'success-message' }}"
+          >
+            {{ mensagem }}
+          </p>
+          {% endfor %} {% endwith %}
 
-          <div class="label-row">
-            <label for="password">Senha</label>
+          <div class="mobile-brand">
+            <span class="brand-mark">IB</span><strong>IBLFF</strong>
           </div>
-          <div class="password-field">
-            <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password">
-            <button class="icon-button" type="button" id="toggle-password" aria-label="Mostrar senha">◉</button>
-          </div>
-          <a class="forgot-link" href="#" id="forgot-link">Esqueci minha senha</a>
-          <button class="primary-button" type="submit">Acessar Sistema</button>
+          <h2 id="login-title">Bem-vindo de volta</h2>
+          <p class="intro">Faça login para acessar o sistema</p>
+          <form id="login-form" method="POST" action="{{ url_for('index') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <label for="identity">E-mail ou Telefone</label>
+            <input
+              id="identity"
+              name="identity"
+              type="text"
+              placeholder="seuemail@exemplo.com"
+              autocomplete="username"
+              required
+            />
+
+            <p class="error-message" id="identity-error" role="alert"></p>
+
+            <div class="label-row">
+              <label for="password">Senha</label>
+            </div>
+            <div class="password-field">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                class="icon-button"
+                type="button"
+                id="toggle-password"
+                aria-label="Mostrar senha"
+              >
+                ◉
+              </button>
+            </div>
+            <a class="forgot-link" href="#" id="forgot-link"
+              >Esqueci minha senha</a
+            >
+            <button class="primary-button" type="submit">
+              Acessar Sistema
+            </button>
+          </form>
+          <p class="legal">
+            Ao acessar, você concorda com nossos <a href="#">Termos de Uso</a> e
+            <a href="#">Política de Privacidade</a>.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <main
+      class="dashboard-view hidden"
+      id="dashboard-view"
+      aria-labelledby="dashboard-title"
+    >
+      <header class="dashboard-header">
+        <div class="dashboard-logo">
+          <span class="brand-mark">IB</span><strong>IBLFF</strong>
+        </div>
+        <form method="POST" action="{{ url_for('sair') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <button class="outline-button small-button" type="submit">
+            Sair
+          </button>
         </form>
-        <p class="legal">Ao acessar, você concorda com nossos <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>.</p>
-      </div>
-    </section>
-  </main>
+      </header>
+      <section class="dashboard-content">
+        <p class="eyebrow">Visão geral</p>
+        <h1>Olá, {{ nome }}</h1>
+        <p>Perfil: {{ perfil }}</p>
+        <p class="dashboard-subtitle">
+          Acompanhe as atividades do instituto em um só lugar.
+        </p>
+        <div class="stats-grid">
+          <article>
+            <span>Beneficiários</span><strong>142</strong
+            ><small>+3 este mês</small>
+          </article>
+          <article>
+            <span>Voluntários</span><strong>28</strong
+            ><small>Ativos no sistema</small>
+          </article>
+          <article>
+            <span>Modalidades</span><strong>6</strong
+            ><small>1 turma lotada</small>
+          </article>
+          <article>
+            <span>Presença hoje</span><strong>87%</strong
+            ><small>49 de 56 alunos</small>
+          </article>
+        </div>
+        <div class="module-grid">
+          <a href="chamada.html"
+            ><strong>Registrar Chamada</strong
+            ><span>Controle de presença</span></a
+          ><a href="cadastro.html"
+            ><strong>Novo Cadastro</strong
+            ><span>Voluntários e beneficiários</span></a
+          ><a href="relatorios.html"
+            ><strong>Ver Relatórios</strong><span>Dados e auditoria</span></a
+          ><a href="modalidades.html"
+            ><strong>Modalidades</strong><span>Turmas e vagas</span></a
+          >
+        </div>
+      </section>
+    </main>
 
-  <main class="dashboard-view hidden" id="dashboard-view" aria-labelledby="dashboard-title">
-    <header class="dashboard-header"><div class="dashboard-logo"><span class="brand-mark">IB</span><strong>IBLFF</strong></div><button class="outline-button" id="logout-button">Sair</button></header>
-    <section class="dashboard-content"><p class="eyebrow">Visão geral</p><h1 id="dashboard-title">Olá, equipe IBLFF</h1><p class="dashboard-subtitle">Acompanhe as atividades do instituto em um só lugar.</p>
-      <div class="stats-grid"><article><span>Beneficiários</span><strong>142</strong><small>+3 este mês</small></article><article><span>Voluntários</span><strong>28</strong><small>Ativos no sistema</small></article><article><span>Modalidades</span><strong>6</strong><small>1 turma lotada</small></article><article><span>Presença hoje</span><strong>87%</strong><small>49 de 56 alunos</small></article></div>
-      <div class="module-grid"><a href="chamada.html"><strong>Registrar Chamada</strong><span>Controle de presença</span></a><a href="cadastro.html"><strong>Novo Cadastro</strong><span>Voluntários e beneficiários</span></a><a href="relatorios.html"><strong>Ver Relatórios</strong><span>Dados e auditoria</span></a><a href="modalidades.html"><strong>Modalidades</strong><span>Turmas e vagas</span></a></div>
-    </section>
-  </main>
+    <dialog class="modal" id="forgot-modal" aria-labelledby="forgot-title">
+      <form method="dialog" id="forgot-form">
+        <button class="close-button" value="cancel" aria-label="Fechar">
+          ×
+        </button>
+        <h2 id="forgot-title">Recuperar senha</h2>
+        <p>
+          Informe seu e-mail ou telefone cadastrado. Enviaremos um código de
+          verificação.
+        </p>
+        <label for="recovery">E-mail ou Telefone</label
+        ><input
+          id="recovery"
+          type="text"
+          placeholder="exemplo@email.com ou (11) 99999-9999"
+        />
+        <div class="modal-actions">
+          <button class="secondary-button" value="cancel">Cancelar</button
+          ><button class="primary-button" type="button" id="send-code">
+            Enviar Código
+          </button>
+        </div>
+        <p class="success-message" id="recovery-success">
+          Código enviado. Verifique seu e-mail ou SMS.
+        </p>
+      </form>
+    </dialog>
 
-  <dialog class="modal" id="forgot-modal" aria-labelledby="forgot-title"><form method="dialog" id="forgot-form"><button class="close-button" value="cancel" aria-label="Fechar">×</button><h2 id="forgot-title">Recuperar senha</h2><p>Informe seu e-mail ou telefone cadastrado. Enviaremos um código de verificação.</p><label for="recovery">E-mail ou Telefone</label><input id="recovery" type="text" placeholder="exemplo@email.com ou (11) 99999-9999"><div class="modal-actions"><button class="secondary-button" value="cancel">Cancelar</button><button class="primary-button" type="button" id="send-code">Enviar Código</button></div><p class="success-message" id="recovery-success">Código enviado. Verifique seu e-mail ou SMS.</p></form></dialog>
+    <dialog
+      class="modal consent-modal"
+      id="consent-modal"
+      aria-labelledby="consent-title"
+    >
+      <form method="dialog" id="consent-form">
+        <h2 id="consent-title">Termo de Consentimento (LGPD)</h2>
+        <p class="modal-kicker">Primeiro acesso — leitura obrigatória</p>
+        <div class="consent-copy">
+          <p>
+            Em cumprimento à
+            <strong
+              >Lei Geral de Proteção de Dados (LGPD — Lei nº
+              13.709/2018)</strong
+            >, o Instituto Batista Lázaro Ferreira Filho informa como seus dados
+            pessoais serão tratados nesta plataforma.
+          </p>
+          <h3>Dados coletados</h3>
+          <p>
+            Nome, CPF, data de nascimento, telefone, e-mail e endereço para
+            gestão de voluntários e beneficiários.
+          </p>
+          <h3>Finalidade e direitos</h3>
+          <p>
+            Os dados apoiam o controle de presença, relatórios e gestão de
+            vagas. Você pode solicitar acesso, correção ou exclusão pelo e-mail
+            privacidade@iblff.org.br.
+          </p>
+        </div>
+        <label class="check-row"
+          ><input id="consent-check" type="checkbox" /><span
+            >Li e concordo com os termos de uso e a política de
+            privacidade.</span
+          ></label
+        ><button
+          class="primary-button"
+          id="accept-consent"
+          type="submit"
+          disabled
+        >
+          Aceitar e Continuar
+        </button>
+      </form>
+    </dialog>
 
-  <dialog class="modal consent-modal" id="consent-modal" aria-labelledby="consent-title"><form method="dialog" id="consent-form"><h2 id="consent-title">Termo de Consentimento (LGPD)</h2><p class="modal-kicker">Primeiro acesso — leitura obrigatória</p><div class="consent-copy"><p>Em cumprimento à <strong>Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)</strong>, o Instituto Batista Lázaro Ferreira Filho informa como seus dados pessoais serão tratados nesta plataforma.</p><h3>Dados coletados</h3><p>Nome, CPF, data de nascimento, telefone, e-mail e endereço para gestão de voluntários e beneficiários.</p><h3>Finalidade e direitos</h3><p>Os dados apoiam o controle de presença, relatórios e gestão de vagas. Você pode solicitar acesso, correção ou exclusão pelo e-mail privacidade@iblff.org.br.</p></div><label class="check-row"><input id="consent-check" type="checkbox"><span>Li e concordo com os termos de uso e a política de privacidade.</span></label><button class="primary-button" id="accept-consent" type="submit" disabled>Aceitar e Continuar</button></form></dialog>
-
-  <script>
-    const loginView = document.getElementById('login-view');
-    const dashboardView = document.getElementById('dashboard-view');
-    const loginForm = document.getElementById('login-form');
-    const identity = document.getElementById('identity');
-    const identityError = document.getElementById('identity-error');
-    const consentModal = document.getElementById('consent-modal');
-    loginForm.addEventListener('submit', (event) => { event.preventDefault(); if (!identity.value.trim()) { identityError.textContent = 'Informe seu e-mail ou telefone.'; identity.focus(); return; } identityError.textContent = ''; consentModal.showModal(); });
-    document.getElementById('toggle-password').addEventListener('click', () => { const input = document.getElementById('password'); input.type = input.type === 'password' ? 'text' : 'password'; });
-    document.getElementById('forgot-link').addEventListener('click', (event) => { event.preventDefault(); document.getElementById('forgot-modal').showModal(); });
-    document.getElementById('consent-check').addEventListener('change', (event) => { document.getElementById('accept-consent').disabled = !event.target.checked; });
-    document.getElementById('consent-form').addEventListener('submit', (event) => { if (event.submitter.id !== 'accept-consent') return; event.preventDefault(); window.location.href = 'dashboard.html'; });
-    document.getElementById('send-code').addEventListener('click', () => { const recovery = document.getElementById('recovery'); if (!recovery.value.trim()) { recovery.focus(); return; } document.getElementById('recovery-success').classList.add('visible'); });
-    document.getElementById('logout-button').addEventListener('click', () => { dashboardView.classList.add('hidden'); loginView.classList.remove('hidden'); });
-  </script>
-</body>
+    <script>
+      const loginView = document.getElementById("login-view");
+      const dashboardView = document.getElementById("dashboard-view");
+      const loginForm = document.getElementById("login-form");
+      const identity = document.getElementById("identity");
+      const identityError = document.getElementById("identity-error");
+      const consentModal = document.getElementById("consent-modal");
+      loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!identity.value.trim()) {
+          identityError.textContent = "Informe seu e-mail ou telefone.";
+          identity.focus();
+          return;
+        }
+        identityError.textContent = "";
+        consentModal.showModal();
+      });
+      document
+        .getElementById("toggle-password")
+        .addEventListener("click", () => {
+          const input = document.getElementById("password");
+          input.type = input.type === "password" ? "text" : "password";
+        });
+      document
+        .getElementById("forgot-link")
+        .addEventListener("click", (event) => {
+          event.preventDefault();
+          document.getElementById("forgot-modal").showModal();
+        });
+      document
+        .getElementById("consent-check")
+        .addEventListener("change", (event) => {
+          document.getElementById("accept-consent").disabled =
+            !event.target.checked;
+        });
+      document
+        .getElementById("consent-form")
+        .addEventListener("submit", (event) => {
+          if (event.submitter.id !== "accept-consent") return;
+          event.preventDefault();
+          window.location.href = "dashboard.html";
+        });
+      document.getElementById("send-code").addEventListener("click", () => {
+        const recovery = document.getElementById("recovery");
+        if (!recovery.value.trim()) {
+          recovery.focus();
+          return;
+        }
+        document.getElementById("recovery-success").classList.add("visible");
+      });
+      document.getElementById("logout-button").addEventListener("click", () => {
+        dashboardView.classList.add("hidden");
+        loginView.classList.remove("hidden");
+      });
+    </script>
+  </body>
 </html>

@@ -1,0 +1,175 @@
+
+<form class="data-form"
+      action="{{ url_for('cadastrar_beneficiario_web') }}"
+      method="POST">
+
+  <fieldset>
+    <legend>Dados pessoais</legend>
+
+    <div class="form-grid">
+
+      <div class="field full">
+        <label for="beneficiario-nome">Nome completo *</label>
+        <input
+          id="beneficiario-nome"
+          name="nome"
+          type="text"
+          maxlength="120"
+          placeholder="Digite o nome completo"
+          autocomplete="name"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="beneficiario-nascimento">Data de nascimento *</label>
+        <input
+          id="beneficiario-nascimento"
+          name="data_nasc"
+          type="date"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="beneficiario-cpf">CPF</label>
+        <input
+          id="beneficiario-cpf"
+          name="cpf"
+          type="text"
+          inputmode="numeric"
+          maxlength="11"
+          pattern="[0-9]{11}"
+          placeholder="Somente 11 números"
+          title="Informe exatamente 11 números."
+        />
+      </div>
+
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Contato</legend>
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label for="beneficiario-telefone">Telefone</label>
+        <input
+          id="beneficiario-telefone"
+          name="telefone"
+          type="tel"
+          inputmode="numeric"
+          maxlength="15"
+          pattern="[0-9]{1,15}"
+          placeholder="DDD + número"
+          autocomplete="tel"
+        />
+      </div>
+
+      <div class="field">
+        <label for="beneficiario-email">E-mail</label>
+        <input
+          id="beneficiario-email"
+          name="email"
+          type="email"
+          maxlength="120"
+          placeholder="email@exemplo.com"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="field full">
+        <label for="beneficiario-endereco">Endereço</label>
+        <input
+          id="beneficiario-endereco"
+          name="endereco"
+          type="text"
+          maxlength="255"
+          placeholder="Rua, número e bairro"
+          autocomplete="street-address"
+        />
+      </div>
+
+    </div>
+
+    <small class="field-hint">
+      Informe pelo menos um contato: telefone ou e-mail.
+    </small>
+  </fieldset>
+
+  <fieldset>
+    <legend>Responsável legal</legend>
+
+    <p class="field-hint">
+      Para beneficiários menores de 18 anos, os dados do responsável
+      e o consentimento são obrigatórios.
+    </p>
+
+    <div class="form-grid">
+
+      <div class="field full">
+        <label for="responsavel-nome">Nome do responsável</label>
+        <input
+          id="responsavel-nome"
+          name="responsavel_nome"
+          type="text"
+          maxlength="120"
+          placeholder="Nome completo do responsável"
+        />
+      </div>
+
+      <div class="field">
+        <label for="responsavel-cpf">CPF do responsável</label>
+        <input
+          id="responsavel-cpf"
+          name="responsavel_cpf"
+          type="text"
+          inputmode="numeric"
+          maxlength="11"
+          pattern="[0-9]{11}"
+          placeholder="Somente 11 números"
+        />
+      </div>
+
+      <div class="field">
+        <label for="responsavel-telefone">Telefone do responsável</label>
+        <input
+          id="responsavel-telefone"
+          name="responsavel_telefone"
+          type="tel"
+          inputmode="numeric"
+          maxlength="15"
+          pattern="[0-9]{1,15}"
+          placeholder="DDD + número"
+        />
+      </div>
+
+      <div class="field full">
+        <label class="check-row">
+          <input
+            type="checkbox"
+            name="consentimento_responsavel"
+            value="sim"
+          />
+          <span>
+            Declaro que sou responsável legal e autorizo o cadastro
+            e a participação do menor, conforme o termo de consentimento.
+          </span>
+        </label>
+      </div>
+
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <a class="secondary-button compact-button" href="dashboard.html">
+      Cancelar
+    </a>
+
+    <button class="primary-button compact-button" type="submit">
+      Salvar beneficiário
+    </button>
+  </div>
+
+</form>

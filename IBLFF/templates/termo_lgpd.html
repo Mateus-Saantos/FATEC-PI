@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IBLFF | Termo LGPD</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <main class="login-area">
+      <section class="login-card">
+        <h1>Termo de Consentimento LGPD</h1>
+        <p>Primeiro acesso — leitura obrigatória</p>
+
+        <p>Olá, {{ nome }}.</p>
+        <p>Leia atentamente o termo abaixo:</p>
+
+        <pre style="white-space: pre-wrap">{{ termo }}</pre>
+
+        <form method="POST" action="{{ url_for('termo_lgpd') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+
+          <label>
+            <input type="checkbox" name="consentimento" value="sim" required />
+            Li e concordo com o Termo de Consentimento.
+          </label>
+
+          <button
+            class="primary-button"
+            type="submit"
+            name="acao"
+            value="aceitar"
+          >
+            Aceitar e continuar
+          </button>
+
+          <button
+            class="secondary-button"
+            type="submit"
+            name="acao"
+            value="recusar"
+            formnovalidate
+          >
+            Recusar e sair
+          </button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

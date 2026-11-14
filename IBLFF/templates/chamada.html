@@ -5,20 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Controle de presença IBLFF" />
     <title>IBLFF | Chamada</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
   </head>
   <body class="app-body">
     <header class="app-header">
-      <a class="app-logo" href="dashboard.html"
+      <a class="app-logo" href="{{ url_for('dashboard') }}"
         ><span class="brand-mark">IB</span><strong>IBLFF</strong></a
       >
       <nav class="app-nav" aria-label="Navegação principal">
-        <a href="dashboard.html">Painel</a><a href="cadastro.html">Cadastros</a
-        ><a class="active" href="chamada.html">Chamada</a
-        ><a href="relatorios.html">Relatórios</a
-        ><a href="modalidades.html">Modalidades</a>
+        <a href="{{ url_for('dashboard') }}">Painel</a
+        ><a href="{{ url_for('cadastro') }}">Cadastros</a
+        ><a class="active" href="{{ url_for('chamada') }}">Chamada</a
+        ><a href="{{ url_for('relatorios') }}">Relatórios</a
+        ><a href="{{ url_for('modalidades') }}">Modalidades</a>
       </nav>
-      <a class="outline-button small-button" href="index.html">Sair</a>
+      <form method="POST" action="{{ url_for('sair') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+        <button class="outline-button small-button" type="submit">Sair</button>
+      </form>
     </header>
     <main class="app-main">
       <div class="page-title-row">

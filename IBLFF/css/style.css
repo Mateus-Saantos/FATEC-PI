@@ -80,19 +80,44 @@ body {
   height: 80px;
   width: 80px;
 }
-.brand-name {
+
+
+/* ============================== */
+/*          Beneficiário          */
+/* ============================== */
+.brand-beneficiario-name {
   display: grid;
   gap: 2px;
 }
-.brand-name strong {
+.brand-beneficiario-name strong {
   color: #fff;
   font: 700 1.25rem var(--font-display);
   letter-spacing: 0.08em;
 }
-.brand-name small {
+.brand-beneficiario-name small {
   color: #94a3b8;
   font-size: 0.75rem;
 }
+
+
+/* ============================== */
+/*          Voluntário            */
+/* ============================== */
+.brand-voluntario-name {
+  display: grid;
+  gap: 2px;
+}
+.brand-voluntario-name strong {
+  color: #fff;
+  font: 700 1.25rem var(--font-display);
+  letter-spacing: 0.08em;
+}
+.brand-voluntario-name small {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+
 .brand-panel h1 {
   font-family: var(--font-display);
   font-size: clamp(1.7rem, 2.4vw, 2.3rem);

@@ -1,0 +1,156 @@
+
+<form class="data-form"
+      action="{{ url_for('cadastrar_voluntario_web') }}"
+      method="POST">
+
+  <fieldset>
+    <legend>Dados pessoais</legend>
+
+    <div class="form-grid">
+
+      <div class="field full">
+        <label for="voluntario-nome">Nome completo *</label>
+        <input
+          id="voluntario-nome"
+          name="nome"
+          type="text"
+          maxlength="120"
+          placeholder="Digite o nome completo"
+          autocomplete="name"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="voluntario-nascimento">Data de nascimento</label>
+        <input
+          id="voluntario-nascimento"
+          name="data_nasc"
+          type="date"
+        />
+      </div>
+
+      <div class="field">
+        <label for="voluntario-cpf">CPF</label>
+        <input
+          id="voluntario-cpf"
+          name="cpf"
+          type="text"
+          inputmode="numeric"
+          maxlength="11"
+          pattern="[0-9]{11}"
+          placeholder="Somente 11 números"
+        />
+      </div>
+
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Contato</legend>
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label for="voluntario-telefone">Telefone</label>
+        <input
+          id="voluntario-telefone"
+          name="telefone"
+          type="tel"
+          inputmode="numeric"
+          maxlength="15"
+          pattern="[0-9]{1,15}"
+          placeholder="DDD + número"
+          autocomplete="tel"
+        />
+      </div>
+
+      <div class="field">
+        <label for="voluntario-email">E-mail</label>
+        <input
+          id="voluntario-email"
+          name="email"
+          type="email"
+          maxlength="120"
+          placeholder="email@exemplo.com"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="field full">
+        <label for="voluntario-endereco">Endereço</label>
+        <input
+          id="voluntario-endereco"
+          name="endereco"
+          type="text"
+          maxlength="255"
+          placeholder="Rua, número e bairro"
+          autocomplete="street-address"
+        />
+      </div>
+
+    </div>
+
+    <small class="field-hint">
+      Informe pelo menos um contato: telefone ou e-mail.
+    </small>
+  </fieldset>
+
+  <fieldset>
+    <legend>Atuação voluntária</legend>
+
+    <div class="form-grid">
+
+      <div class="field full">
+        <label for="voluntario-funcao">Matéria ou função *</label>
+        <input
+          id="voluntario-funcao"
+          name="materia_funcao"
+          type="text"
+          maxlength="80"
+          placeholder="Ex.: Professor de Balé, Auxiliar..."
+          required
+        />
+      </div>
+
+      <div class="field full">
+        <label for="voluntario-data-assinatura">
+          Data de assinatura do termo *
+        </label>
+        <input
+          id="voluntario-data-assinatura"
+          name="data_assinatura"
+          type="date"
+          required
+        />
+      </div>
+
+      <div class="field full">
+        <label class="check-row">
+          <input
+            type="checkbox"
+            name="termo_assinado"
+            value="1"
+            required
+          />
+          <span>
+            Confirmo que o termo de voluntariado foi assinado
+              e que a informação acima corresponde à assinatura realizada.
+          </span>
+        </label>
+      </div>
+
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <a class="secondary-button compact-button" href="dashboard.html">
+      Cancelar
+    </a>
+
+    <button class="primary-button compact-button" type="submit">
+      Salvar voluntário
+    </button>
+  </div>
+
+</form>

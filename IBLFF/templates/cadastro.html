@@ -5,21 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Cadastro de pessoas no IBLFF" />
     <title>IBLFF | Cadastro</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
   </head>
   <body class="app-body">
     <header class="app-header">
-      <a class="app-logo" href="dashboard.html"
+      <a class="app-logo" href="{{ url_for('dashboard') }}"
         ><span class="brand-mark">IB</span><strong>IBLFF</strong></a
       >
       <nav class="app-nav" aria-label="Navegação principal">
-        <a href="dashboard.html">Painel</a
-        ><a class="active" href="cadastro.html">Cadastros</a
-        ><a href="chamada.html">Chamada</a
-        ><a href="relatorios.html">Relatórios</a
-        ><a href="modalidades.html">Modalidades</a>
+        <a href="{{ url_for('dashboard') }}">Painel</a
+        ><a class="active" href="{{ url_for('cadastro') }}">Cadastros</a
+        ><a href="{{ url_for('chamada') }}">Chamada</a
+        ><a href="{{ url_for('relatorios') }}">Relatórios</a
+        ><a href="{{ url_for('modalidades') }}">Modalidades</a>
       </nav>
-      <a class="outline-button small-button" href="index.html">Sair</a>
+      <form method="POST" action="{{ url_for('sair') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+        <button class="outline-button small-button" type="submit">Sair</button>
+      </form>
     </header>
     <main class="app-main">
       <div class="page-title-row">
@@ -30,87 +36,83 @@
             Preencha os dados para incluir um voluntário ou beneficiário.
           </p>
         </div>
-        <a class="secondary-button compact-button" href="dashboard.html"
+        <a
+          class="secondary-button compact-button"
+          href="{{ url_for('dashboard') }}"
           >Voltar ao painel</a
         >
       </div>
+
       <section class="surface form-surface">
         <div class="form-tabs">
-          <button class="tab active" type="button">Beneficiário</button
-          ><button class="tab" type="button">Voluntário</button>
+          <button class="tab active" type="button" data-form="beneficiario">
+            Beneficiário
+          </button>
+
+          <button class="tab" type="button" data-form="voluntario">
+            Voluntário
+          </button>
         </div>
-        <form class="data-form" action="dashboard.html">
-          <fieldset>
-            <legend>Dados pessoais</legend>
-            <div class="form-grid">
-              <div class="field full">
-                <label for="name">Nome completo</label
-                ><input
-                  id="name"
-                  required
-                  placeholder="Digite o nome completo"
-                />
-              </div>
-              <div class="field">
-                <label for="birth">Data de nascimento</label
-                ><input id="birth" type="date" required />
-              </div>
-              <div class="field">
-                <label for="cpf">CPF</label
-                ><input id="cpf" required placeholder="000.000.000-00" /><small
-                  class="field-hint valid"
-                  >✓ CPF disponível para cadastro</small
-                >
-              </div>
-            </div>
-          </fieldset>
-          <fieldset>
-            <legend>Contato e acesso</legend>
-            <div class="form-grid">
-              <div class="field">
-                <label for="phone">Telefone</label
-                ><input id="phone" required placeholder="(00) 00000-0000" />
-              </div>
-              <div class="field">
-                <label for="email">E-mail</label
-                ><input
-                  id="email"
-                  type="email"
-                  required
-                  placeholder="email@exemplo.com"
-                />
-              </div>
-              <div class="field">
-                <label for="address">Endereço</label
-                ><input id="address" placeholder="Rua, número e bairro" />
-              </div>
-              <div class="field">
-                <label for="course">Modalidade</label
-                ><select id="course">
-                  <option>Selecione uma modalidade</option>
-                  <option>Balé</option>
-                  <option>Jazz</option>
-                  <option>Judô</option>
-                  <option>Violino</option>
-                </select>
-              </div>
-            </div>
-          </fieldset>
-          <label class="check-row"
-            ><input type="checkbox" required /><span
-              >Confirmo que os dados informados foram revisados e autorizo seu
-              uso conforme a política de privacidade.</span
-            ></label
-          >
-          <div class="form-actions">
-            <a class="secondary-button compact-button" href="dashboard.html"
-              >Cancelar</a
-            ><button class="primary-button compact-button" type="submit">
-              Salvar cadastro
-            </button>
-          </div>
-        </form>
+
+        <div id="form-beneficiario">{% include 'form-beneficiario.html' %}</div>
+
+        <div id="form-voluntario" hidden>
+          {% include 'form-voluntario.html' %}
+        </div>
       </section>
+      <script>
+        // ======================================================================
+        // Alternar abas do formulário
+        // ======================================================================
+        const abas = document.querySelectorAll(".form-tabs .tab");
+
+        const formularios = {
+          beneficiario: document.getElementById("form-beneficiario"),
+          voluntario: document.getElementById("form-voluntario"),
+        };
+
+        abas.forEach((aba) => {
+          aba.addEventListener("click", () => {
+            const selecionado = aba.dataset.form;
+
+            abas.forEach((item) => item.classList.remove("active"));
+            aba.classList.add("active");
+
+            Object.entries(formularios).forEach(([tipo, formulario]) => {
+              formulario.hidden = tipo !== selecionado;
+            });
+          });
+        });
+
+        // ======================================================================
+        // Validação de contato
+        // ======================================================================
+        const form = document.getElementById("formCadastro");
+        const telefone = document.getElementById("phone");
+        const email = document.getElementById("email");
+
+        function validarContato() {
+          telefone.setCustomValidity("");
+
+          if (!telefone.value.trim() && !email.value.trim()) {
+            telefone.setCustomValidity(
+              "Informe pelo menos um contato: telefone ou e-mail.",
+            );
+          }
+        }
+
+        telefone.addEventListener("input", validarContato);
+        email.addEventListener("input", validarContato);
+
+        form.addEventListener("submit", function (event) {
+          validarContato();
+
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            form.reportValidity();
+          }
+        });
+      </script>
     </main>
   </body>
 </html>
