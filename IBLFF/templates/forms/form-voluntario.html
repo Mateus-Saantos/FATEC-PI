@@ -25,7 +25,7 @@
       <div class="form-group">
         <label for="turma_ids">Turmas</label>
 
-        <select id="turma_ids" name="turma_ids" multiple required>
+        <select id="turma_ids" name="turma_ids" multiple>
           {% for turma in turmas %}
           <option value="{{ turma.turma_id }}">
             {{ turma.turma }} - {{ turma.modalidade }}

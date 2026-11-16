@@ -21,24 +21,23 @@ def listar_voluntarios_ativos():
         "JOIN pessoa p ON p.id = v.pessoa_id "
         "WHERE v.ativo = TRUE AND v.termo_assinado = TRUE ORDER BY p.nome")
 
-
 def listar_turmas():
-    """Turmas ativas com professor, sala, horário, dias e ocupação de vagas."""
+    """Turmas ativas com professor, horário, dias e ocupação de vagas."""
     return consultar(
-        "SELECT t.id AS turma_id, t.nome AS turma, md.nome AS modalidade, "
-        "pp.nome AS professor, t.sala, "
+        "SELECT t.id AS turma_id, t.nome AS turma, md.descricao AS modalidade, "
+        "pp.nome AS professor, "
         "CONCAT(LEFT(t.horario_inicio, 5), '-', LEFT(t.horario_fim, 5)) AS horario, "
-        "(SELECT GROUP_CONCAT(td.dia_semana ORDER BY "
-        "  FIELD(td.dia_semana,'SEG','TER','QUA','QUI','SEX','SAB')) "
-        "  FROM turma_dia td WHERE td.turma_id = t.id) AS dias, "
-        "vm.vagas_ocupadas, vm.vagas_maximas, vm.lotada "
+        "t.dia_semana AS dias, "
+        "vm.vagas_ocupadas, vm.vagas_maximas, vm.vagas_disponiveis, "
+        "(vm.vagas_ocupadas >= vm.vagas_maximas) AS lotada "
         "FROM turma t "
         "JOIN modalidade md ON md.id = t.modalidade_id "
         "JOIN voluntario v ON v.id = t.voluntario_id "
         "JOIN pessoa pp ON pp.id = v.pessoa_id "
         "JOIN vw_vagas_modalidade vm ON vm.modalidade_id = md.id "
-        "WHERE t.ativa = TRUE AND md.ativo = TRUE ORDER BY md.nome, t.nome")
-
+        "WHERE t.ativa = TRUE AND md.ativo = TRUE "
+        "ORDER BY md.descricao, t.nome"
+    )
 
 def listar_modalidades():
     """Cards da tela de modalidades: ocupação de vagas e selo de lotação."""
